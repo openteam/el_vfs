@@ -1,9 +1,9 @@
-source "http://rubygems.org"
+source :rubygems
 
-gem "rails", "~> 3.1.0"
-gem "vfs", :path => '../../../vfs'
-gem "jquery-rails"
+gem 'rails', '~> 3.1.0'
+gem 'vfs', :path => '../../../vfs'
+gem 'jquery-rails'
 
 group :development, :test do
-  gem "sqlite3"
+  gem 'sqlite3'
 end
