@@ -1,4 +1,4 @@
-source "http://rubygems.org"
+source :rubygems
 
 # Declare your gem's dependencies in vfs.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
