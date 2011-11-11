@@ -2,9 +2,7 @@ require "spec_helper"
 
 module Vfs
   describe EntriesController do
-
     describe "routing" do
-
       it "routes to #index" do
         get("/vfs/entries").should route_to("vfs/entries#index")
       end
@@ -32,7 +30,6 @@ module Vfs
       it "routes to #destroy" do
         delete("/vfs/entries/1").should route_to("vfs/entries#destroy", :id => "1")
       end
-
     end
   end
 end

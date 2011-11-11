@@ -5,15 +5,17 @@ Spork.prefork do
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path("../dummy/config/environment", __FILE__)
   require 'rspec/rails'
+  require 'shoulda/matchers'
+  require 'fabrication'
 
-  ENGINE_RAILS_ROOT = File.join(File.dirname(__FILE__), '../')
+  SPEC_ROOT = Rails.root.join('..').to_s
 
-  Dir[Rails.root.join("../support/**/*.rb")].each {|f| require f}
+  Dir["#{SPEC_ROOT}/support/**/*.rb"].each {|f| require f}
+  Dir["#{SPEC_ROOT}/fabricators/**/*.rb"].each {|f| require f}
 
   RSpec.configure do |config|
     config.include Vfs::Engine.routes.url_helpers
     config.mock_with :rspec
-    config.fixture_path = "#{::Rails.root}/spec/fixtures"
     config.use_transactional_fixtures = true
   end
 
