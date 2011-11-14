@@ -28,7 +28,12 @@ describe ElVfs::Connector do
     it { response[:disabled].should_not be_nil }
     it { response[:params].should_not be_nil }
 
-    xit do
+
+    describe 'current directory content' do
+      before  { Fabricate :directory }
+    end
+
+    it do
       response[:cdc].each do |entry|
         case entry[:name]
         when 'foo'

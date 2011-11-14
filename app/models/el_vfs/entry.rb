@@ -5,7 +5,7 @@ module ElVfs
     before_save :set_hash
 
     def self.root
-      Folder.find_or_create_by_name '/'
+      Directory.find_or_create_by_name '/'
     end
 
     def path

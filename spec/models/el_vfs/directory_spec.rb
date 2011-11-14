@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe ElVfs::Folder do
+describe ElVfs::Directory do
   it { should validate_presence_of :name }
 end

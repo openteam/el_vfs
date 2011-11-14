@@ -64,7 +64,7 @@ class ElVfs::Connector
     end
 
     def _open
-      if target.is_a? ElVfs::Folder
+      if target.is_a? ElVfs::Directory
         response[:cwd] = cwd_for(target)
         response[:cdc] = target.children.sort_by{|e| e.basename.to_s.downcase}.map{|e| cdc_for(e)}.compact
 

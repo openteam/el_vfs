@@ -6,7 +6,7 @@ module ElVfs
     describe Entry.root do
       let(:subject) { Entry.root }
       it { should_not be_nil }
-      it { should be_instance_of Folder }
+      it { should be_instance_of Directory }
       its(:name) { should == '/' }
     end
   end

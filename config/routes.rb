@@ -1,5 +1,5 @@
 ElVfs::Engine.routes.draw do
   resources :files
-  resources :folders
+  resources :directories
   resources :entries
 end
