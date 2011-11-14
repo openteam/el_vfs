@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(:version => 20111111024502) do
     t.string   "name"
     t.string   "hash"
     t.string   "ancestry"
+    t.text     "entry_path"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

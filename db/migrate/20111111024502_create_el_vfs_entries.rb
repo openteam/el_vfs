@@ -5,6 +5,7 @@ class CreateElVfsEntries < ActiveRecord::Migration
       t.string :name
       t.string :hash
       t.string :ancestry
+      t.text   :entry_path
       t.timestamps
     end
   end
