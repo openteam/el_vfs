@@ -1,10 +1,29 @@
 class ElVfs::Connector
   VALID_COMMANDS = %w[archive duplicate edit extract mkdir mkfile open paste ping read rename resize rm tmb upload]
 
+  DEFAULT_OPTIONS = {
+    #:mime_handler => ElFinderVFS::MimeType,
+    #:image_handler => ElFinderVFS::Image,
+    #:original_filename_method => lambda { |file| file.name },
+    :disabled_commands => [],
+    #:allow_dot_files => true,
+    #:upload_max_size => '50M',
+    #:upload_file_mode => 0644,
+    :archivers => {},
+    :extractors => {},
+    #:home => 'Home',
+    #:default_perms => {:read => true, :write => true, :rm => true},
+    #:perms => [],
+    #:thumbs => false,
+    #:thumbs_directory => '.thumbs',
+    #:thumbs_size => 48,
+    #:thumbs_at_once => 5,
+  }
+
   attr_accessor :options, :params, :response, :current, :target, :targets, :headers
 
   def initialize(options={})
-    @options = options
+    @options = DEFAULT_OPTIONS.merge options
   end
 
   def run(params={})
@@ -14,18 +33,20 @@ class ElVfs::Connector
     response[:errorData] = {}
 
     if VALID_COMMANDS.include?(params[:cmd])
+      self.target = ElVfs::Entry.root
+      self.current = nil
+      if params[:current]
+        self.current = self.target = ElVfs::Entry.find_by_hash(params[:target]) || ElVfs::Entry.root
+      end
 
-      self.current = params[:current] ? from_hash(params[:current]) : nil
-      self.target = ElVfs::Entry.find_by_name(from_hash(params[:target])) || ElVfs::Entry.root
       if params[:targets]
-        self.targets = params[:targets].map{|t| from_hash(t)}
+        self.targets = params[:targets].map{ | hash | ElVfs::Entry.find_by_hash hash }
       end
 
       send("_#{params[:cmd]}")
     else
       invalid_request
     end
-
     response.delete(:errorData) if response[:errorData].empty?
   end
 
@@ -37,11 +58,6 @@ class ElVfs::Connector
     def invalid_request
       response[:error] = "Invalid command '#{params[:cmd]}'"
     end
-
-    def to_hash(pathname)
-      Base64.encode64(pathname.path.to_s).chomp.tr("\n", "_")
-    end
-
 
     def from_hash(hash)
       pathname = Base64.decode64(hash.tr("_", "\n"))
@@ -55,7 +71,7 @@ class ElVfs::Connector
         if params[:tree]
           response[:tree] = {
             :name => options[:home],
-            :hash => to_hash(root),
+            :hash => root.hash,
             :dirs => tree_for(root),
           }.merge(perms_for(root))
         end
@@ -81,12 +97,12 @@ class ElVfs::Connector
     def cwd_for(target)
       {
         :name => target.name,
-        :hash => to_hash(target.name),
+        :hash => target.hash,
         :mime => 'directory',
-        :rel => pathname.is_root? ? @options[:home] : (@options[:home] + '/' + pathname.path.to_s),
+        :rel =>  target.path,
         :size => 0,
-        :date => pathname.mtime.to_s,
-      }.merge(perms_for(pathname))
+        :date => target.updated_at.to_s,
+      }.merge(target.permissions)
     end
 
 end

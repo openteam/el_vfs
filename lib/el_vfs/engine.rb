@@ -1,3 +1,5 @@
+require 'ancestry'
+
 module ElVfs
   class Engine < Rails::Engine
     isolate_namespace ElVfs
