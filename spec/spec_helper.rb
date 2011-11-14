@@ -14,12 +14,12 @@ Spork.prefork do
   Dir["#{SPEC_ROOT}/fabricators/**/*.rb"].each {|f| require f}
 
   RSpec.configure do |config|
-    config.include Vfs::Engine.routes.url_helpers
+    config.include ElVfs::Engine.routes.url_helpers
     config.mock_with :rspec
     config.use_transactional_fixtures = true
   end
 
-  Vfs::Engine.load_engine_routes
+  ElVfs::Engine.load_engine_routes
 end
 
 Spork.each_run do

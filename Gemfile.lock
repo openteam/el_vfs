@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    vfs (0.0.1)
+    el_vfs (0.0.1)
       rails (~> 3.1.1)
 
 GEM
@@ -129,6 +129,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  el_vfs!
   fabrication
   guard-rspec
   guard-spork
@@ -140,4 +141,3 @@ DEPENDENCIES
   shoulda-matchers
   spork (~> 0.9.0.rc9)
   sqlite3
-  vfs!

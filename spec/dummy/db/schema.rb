@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(:version => 20111111024502) do
 
-  create_table "vfs_entries", :force => true do |t|
+  create_table "el_vfs_entries", :force => true do |t|
     t.string   "name"
     t.string   "type"
     t.datetime "created_at"

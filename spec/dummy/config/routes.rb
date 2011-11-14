@@ -1,3 +1,3 @@
 Rails.application.routes.draw do
-  mount Vfs::Engine => '/vfs'
+  mount ElVfs::Engine => '/el_vfs'
 end

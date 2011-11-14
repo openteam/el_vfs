@@ -1,3 +1,3 @@
-Fabricator(:entry, :from => Vfs::Entry) do
+Fabricator(:entry, :from => ElVfs::Entry) do
   name "MyString"
 end

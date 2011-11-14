@@ -9,7 +9,7 @@ require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
 Bundler.require
-require "vfs"
+require "el_vfs"
 
 module Dummy
   class Application < Rails::Application

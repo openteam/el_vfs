@@ -1,7 +1,7 @@
 source :rubygems
 
 gem 'rails', '~> 3.1.0'
-gem 'vfs', :path => '../../../vfs'
+gem 'el_vfs', :path => '../../../el_vfs'
 gem 'jquery-rails'
 
 group :development, :test do
