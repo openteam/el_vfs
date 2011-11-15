@@ -14,20 +14,16 @@ module ElVfs
 
     let(:directory) { Fabricate :directory }
 
-    def json(options={})
-      ActiveSupport::JSON.decode(directory.el_json).with_indifferent_access
-    end
-
     it { directory.entry_uid.should == '/directory' }
 
-    it { json[:name].should == 'directory' }
-    it { json[:hash].should == '/directory' }
-    it { json[:date].should == I18n.l(Time.now) }
-    it { json[:mime].should == 'directory' }
-    it { json[:size].should == 0 }
-    it { json[:read].should == true }
-    it { json[:write].should == true }
-    it { json[:rm].should == true }
+    it { directory.el_hash[:name].should == 'directory' }
+    it { directory.el_hash[:hash].should == 'ZGlyZWN0b3J5' }
+    it { directory.el_hash[:date].should == I18n.l(Time.now) }
+    it { directory.el_hash[:mime].should == 'directory' }
+    it { directory.el_hash[:size].should == 0 }
+    it { directory.el_hash[:read].should == true }
+    it { directory.el_hash[:write].should == true }
+    it { directory.el_hash[:rm].should == true }
 
     describe 'вложенная на 1 уровень' do
       let(:directory) { Fabricate(:directory, :parent => Fabricate(:directory, :entry_name => :root)) }

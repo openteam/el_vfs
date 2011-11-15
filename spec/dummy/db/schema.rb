@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(:version => 20111111111111) do
     t.string   "type"
     t.string   "ancestry"
     t.text     "entry_uid"
+    t.text     "entry_uid_hash"
     t.string   "entry_name"
     t.string   "entry_mime_type"
     t.integer  "entry_size"

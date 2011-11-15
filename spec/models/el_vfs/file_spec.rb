@@ -5,17 +5,13 @@ describe ElVfs::File do
 
   let(:file) { Fabricate :file }
 
-  def json
-    ActiveSupport::JSON.decode(file.el_json).with_indifferent_access
-  end
-
-  it { json[:name].should == 'file.txt' }
-  it { json[:hash].should == '/directory/file.txt' }
-  it { json[:date].should == I18n.l(Time.now) }
-  it { json[:mime].should == 'text/plain' }
-  it { json[:size].should == 10 }
-  it { json[:read].should == true }
-  it { json[:write].should == true }
-  it { json[:rm].should == true }
+  it { file.el_hash[:name].should == 'file.txt' }
+  it { file.el_hash[:hash].should == 'ZGlyZWN0b3J5L2ZpbGUudHh0' }
+  it { file.el_hash[:date].should == I18n.l(Time.now) }
+  it { file.el_hash[:mime].should == 'text/plain' }
+  it { file.el_hash[:size].should == 10 }
+  it { file.el_hash[:read].should == true }
+  it { file.el_hash[:write].should == true }
+  it { file.el_hash[:rm].should == true }
 
 end

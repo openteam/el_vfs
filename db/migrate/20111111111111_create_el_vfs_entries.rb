@@ -4,6 +4,7 @@ class CreateElVfsEntries < ActiveRecord::Migration
       t.string  :type
       t.string  :ancestry
       t.text    :entry_uid
+      t.text    :entry_uid_hash
       t.string  :entry_name
       t.string  :entry_mime_type
       t.integer :entry_size
