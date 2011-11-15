@@ -4,7 +4,7 @@ class ElVfs::Connector
   DEFAULT_OPTIONS = {
     #:mime_handler => ElFinderVFS::MimeType,
     #:image_handler => ElFinderVFS::Image,
-    #:original_filename_method => lambda { |file| file.name },
+    #:original_filename_method => lambda { |file| file.file_name },
     :disabled_commands => [],
     #:allow_dot_files => true,
     #:upload_max_size => '50M',
@@ -59,13 +59,9 @@ class ElVfs::Connector
       response[:error] = "Invalid command '#{params[:cmd]}'"
     end
 
-    def from_hash(hash)
-      pathname = Base64.decode64(hash.tr("_", "\n"))
-    end
-
     def _open
       if target.is_a? ElVfs::Directory
-        response[:cwd] = cwd_for(target)
+        response[:cwd] = target.el_json
         response[:cdc] = target.children.sort_by{|e| e.basename.to_s.downcase}.map{|e| cdc_for(e)}.compact
 
         if params[:tree]
@@ -92,17 +88,6 @@ class ElVfs::Connector
         _open(root)
       end
 
-    end
-
-    def cwd_for(target)
-      {
-        :name => target.name,
-        :hash => target.hash,
-        :mime => 'directory',
-        :rel =>  target.path,
-        :size => 0,
-        :date => target.updated_at.to_s,
-      }.merge(target.permissions)
     end
 
 end

@@ -1,3 +1,4 @@
 Fabricator(:file, :from => ElVfs::File) do
-  name 'file.txt'
+  file_name 'file.txt'
+  parent { Fabricate :directory }
 end

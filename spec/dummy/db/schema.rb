@@ -15,10 +15,11 @@ ActiveRecord::Schema.define(:version => 20111111024502) do
 
   create_table "el_vfs_entries", :force => true do |t|
     t.string   "type"
-    t.string   "name"
-    t.string   "hash"
     t.string   "ancestry"
-    t.text     "entry_path"
+    t.text     "file_uid"
+    t.string   "file_name"
+    t.string   "file_mime_type"
+    t.integer  "file_size"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

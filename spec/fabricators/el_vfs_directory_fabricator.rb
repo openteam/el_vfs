@@ -1,4 +1,4 @@
 Fabricator(:directory, :from => ElVfs::Directory) do
-  name 'directory'
+  file_name 'directory'
   parent { ElVfs::Directory.root }
 end

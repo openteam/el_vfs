@@ -15,8 +15,11 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib}/**/*'] + ['MIT-LICENSE', 'Rakefile', 'README.rdoc']
 
-  s.add_dependency 'rails', '~> 3.1.1'
   s.add_dependency 'ancestry'
+  s.add_dependency 'configliere'
+  s.add_dependency 'default_value_for'
+  s.add_dependency 'dragonfly'
+  s.add_dependency 'rails', '~> 3.1.1'
 
   s.add_development_dependency 'fabrication'
   s.add_development_dependency 'guard-rspec'
