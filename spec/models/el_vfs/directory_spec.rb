@@ -4,12 +4,12 @@ require 'spec_helper'
 
 module ElVfs
   describe Directory do
-    it { should validate_presence_of :file_name }
+    it { should validate_presence_of :entry_name }
 
     describe Directory.root do
       let(:subject) { ElVfs::Directory.root }
-      its(:file_name) { should == '' }
-      its(:file_uid) { should == '/' }
+      its(:entry_name) { should == '' }
+      its(:entry_uid) { should == '' }
     end
 
     let(:directory) { Fabricate :directory }
@@ -18,7 +18,7 @@ module ElVfs
       ActiveSupport::JSON.decode(directory.el_json).with_indifferent_access
     end
 
-    it { directory.file_uid.should == '/directory' }
+    it { directory.entry_uid.should == '/directory' }
 
     it { json[:name].should == 'directory' }
     it { json[:hash].should == '/directory' }
@@ -30,8 +30,8 @@ module ElVfs
     it { json[:rm].should == true }
 
     describe 'вложенная на 1 уровень' do
-      let(:directory) { Fabricate(:directory, :parent => Fabricate(:directory, :file_name => :root)) }
-      it { directory.file_uid.should == '/root/directory' }
+      let(:directory) { Fabricate(:directory, :parent => Fabricate(:directory, :entry_name => :root)) }
+      it { directory.entry_uid.should == '/root/directory' }
     end
 
   end

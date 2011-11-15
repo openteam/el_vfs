@@ -1,4 +1,4 @@
 Fabricator(:file, :from => ElVfs::File) do
-  file_name 'file.txt'
-  parent { Fabricate :directory }
+  entry   { File.new("#{SPEC_ROOT}/fixtures/file.txt") }
+  parent  { Fabricate :directory }
 end

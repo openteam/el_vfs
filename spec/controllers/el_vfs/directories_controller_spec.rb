@@ -4,7 +4,7 @@ module ElVfs
   describe DirectoriesController do
 
     def valid_attributes
-      { :file_name => 'directory' }
+      { :entry_name => 'directory' }
     end
 
     let(:directory) { Fabricate :directory }

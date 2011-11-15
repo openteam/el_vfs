@@ -1,7 +1,5 @@
 module ElVfs
   class Directory < Entry
-
-    default_values :file_mime_type => 'directory', :file_size => 0
-
+    default_values :entry_mime_type => 'directory', :entry_size => 0
   end
 end

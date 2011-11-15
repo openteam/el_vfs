@@ -3,11 +3,10 @@ class CreateElVfsEntries < ActiveRecord::Migration
     create_table :el_vfs_entries do |t|
       t.string  :type
       t.string  :ancestry
-      t.text    :file_uid
-      t.string  :file_name
-      t.string  :file_mime_type
-      t.integer :file_size
-      t.string  :hash
+      t.text    :entry_uid
+      t.string  :entry_name
+      t.string  :entry_mime_type
+      t.integer :entry_size
       t.timestamps
     end
   end

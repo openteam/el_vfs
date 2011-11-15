@@ -11,15 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111111024502) do
+ActiveRecord::Schema.define(:version => 20111111111111) do
 
   create_table "el_vfs_entries", :force => true do |t|
     t.string   "type"
     t.string   "ancestry"
-    t.text     "file_uid"
-    t.string   "file_name"
-    t.string   "file_mime_type"
-    t.integer  "file_size"
+    t.text     "entry_uid"
+    t.string   "entry_name"
+    t.string   "entry_mime_type"
+    t.integer  "entry_size"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe ElVfs::File do
-  it { should validate_presence_of :file_name }
+  it { should validate_presence_of :entry_name }
 
-  let(:file) { Fabricate :file, :file => File.new("#{SPEC_ROOT}/fixtures/file.txt") }
+  let(:file) { Fabricate :file }
 
   def json
     ActiveSupport::JSON.decode(file.el_json).with_indifferent_access

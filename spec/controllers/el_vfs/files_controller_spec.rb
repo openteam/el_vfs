@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ElVfs::FilesController do
 
   def valid_attributes
-    { :file_name => 'file.txt' }
+    { :entry_name => 'file.txt' }
   end
 
   let(:file) { Fabricate :file }
