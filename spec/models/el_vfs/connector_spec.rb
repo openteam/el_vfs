@@ -2,53 +2,36 @@
 
 require 'spec_helper'
 
-describe ElVfs::Connector do
+module ElVfs
 
-  let(:connector) { ElVfs::Connector.new :url => '/elfinder' }
+  describe Connector do
 
-  delegate :run, :headers, :response, :to => :connector
-
-  describe "запуск без указания команды" do
-    before { run }
-    it { headers.should be_instance_of Hash }
-    it { response.should be_instance_of Hash }
-  end
-
-  describe "должен вернуть invalid command если неверная команда" do
-    before { run :cmd => :invalid }
-    it { response[:error].should_not be_nil }
-    it { response[:error].should =~ /invalid command/i }
-  end
-
-  describe "init via open" do
-    before { run(:cmd => 'open', :init => 'true', :target => '') }
-
-    it { response[:cwd].should_not be_nil }
-    it { response[:cdc].should_not be_nil }
-    it { response[:disabled].should_not be_nil }
-    it { response[:params].should_not be_nil }
-
-
-    describe 'current directory content' do
-      before  { Fabricate :directory }
+    let(:connector) { Connector.new }
+    let(:directory)  { Fabricate :directory }
+    def command_for(name)
+      connector.command_for(:cmd => name)
     end
-
-    it do
-      response[:cdc].each do |entry|
-        case entry[:name]
-        when 'foo'
-          assert_nil entry[:dim]
-          assert_nil entry[:resize]
-          assert_equal 'directory', entry[:mime]
-          assert_equal 0, entry[:size]
-        when 'pjkh.png'
-          assert_equal '100x100', entry[:dim]
-          assert entry[:resize]
-          assert_equal 'image/png', entry[:mime]
-          assert_equal 1142, entry[:size]
-        end
-      end
+    describe 'поиск команд' do
+      it { command_for({}).should be_a(ElVfs::Command::Unknown) }
+      it { command_for(:archive).should be_a(ElVfs::Command::PackEntries) }
+      it { command_for(:duplicate).should be_a(ElVfs::Command::DuplicateEntry) }
+      it { command_for(:edit).should be_a(ElVfs::Command::UpdateFileBody) }
+      it { command_for(:extract).should be_a(ElVfs::Command::UnpackEntry) }
+      it { command_for(:file).should be_a(ElVfs::Command::SendFile) }
+      it { command_for(:ls).should be_a(ElVfs::Command::ListNames) }
+      it { command_for(:mkdir).should be_a(ElVfs::Command::CreateDirectory) }
+      it { command_for(:mkfile).should be_a(ElVfs::Command::CreateFile) }
+      it { command_for(:open).should be_a(ElVfs::Command::ChangeWorkingDirectory) }
+      it { command_for(:parents).should be_a(ElVfs::Command::GetParents) }
+      it { command_for(:paste).should be_a(ElVfs::Command::CopyEntries) }
+      it { command_for(:ping).should be_a(ElVfs::Command::Ping) }
+      it { command_for(:read).should be_a(ElVfs::Command::ReadFileBody) }
+      it { command_for(:rename).should be_a(ElVfs::Command::RenameEntry) }
+      it { command_for(:resize).should be_a(ElVfs::Command::ResizeImage) }
+      it { command_for(:rm).should be_a(ElVfs::Command::DestroyEntries) }
+      it { command_for(:tmb).should be_a(ElVfs::Command::CreateThumbnail) }
+      it { command_for(:tree).should be_a(ElVfs::Command::GetSubtree) }
+      it { command_for(:upload).should be_a(ElVfs::Command::UploadFiles) }
     end
   end
-
 end

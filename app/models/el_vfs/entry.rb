@@ -30,7 +30,8 @@ module ElVfs
           :mime => entry_mime_type,
           :date => I18n.l(updated_at),
           :size => entry_size,
-          :hash => entry_uid
+          :hash => entry_uid,
+          :url  => ::Rails.application.routes.url_helpers.entry_url(self, ::Rails.application.config.action_mailer[:default_url_options])
         }
       end
 
