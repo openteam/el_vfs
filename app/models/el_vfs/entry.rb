@@ -1,9 +1,12 @@
 module ElVfs
   class Entry < ActiveRecord::Base
     validates_presence_of :entry_name
-    has_ancestry
+    has_ancestry :cache_depth => true
     before_save :set_entry_uid
     before_save :set_entry_uid_hash
+
+    scope :only_files, where(['type <> ?', 'ElVfs::Directory'])
+    scope :only_directories, where(:type => 'ElVfs::Directory')
 
     def self.root
       Directory.find_or_initialize_by_entry_name('').tap do | root |

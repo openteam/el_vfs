@@ -6,7 +6,8 @@ class ElVfs::Connector
 
   def command_for(params)
     params = params.dup
-    command_class_for(params.delete(:cmd)).new(params)
+    command_name = params.delete(:cmd)
+    command_class_for(command_name).new(params)
   end
 
   private

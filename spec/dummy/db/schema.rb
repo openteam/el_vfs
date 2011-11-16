@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(:version => 20111111111111) do
   create_table "el_vfs_entries", :force => true do |t|
     t.string   "type"
     t.string   "ancestry"
+    t.integer  "ancestry_depth"
     t.text     "entry_uid"
     t.text     "entry_uid_hash"
     t.string   "entry_name"
@@ -24,5 +25,8 @@ ActiveRecord::Schema.define(:version => 20111111111111) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "el_vfs_entries", ["ancestry"], :name => "index_el_vfs_entries_on_ancestry"
+  add_index "el_vfs_entries", ["entry_uid_hash"], :name => "index_el_vfs_entries_on_entry_uid_hash"
 
 end
