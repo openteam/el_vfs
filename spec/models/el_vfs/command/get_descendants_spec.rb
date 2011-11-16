@@ -2,9 +2,9 @@ require 'spec_helper'
 
 module ElVfs
 
-  describe Command::GetSubtree do
+  describe Command::GetDescendants do
     let(:params)    { {} }
-    let(:command)   { Command::GetSubtree.new params }
+    let(:command)   { Command::GetDescendants.new params }
     let(:subject)   { command.result }
     let(:root)      { Entry.root }
     let(:directory) { Fabricate :directory, :parent => root }
@@ -21,9 +21,11 @@ module ElVfs
       its(:tree) { should == [directory] }
 
       describe 'with directories at 2 level' do
+        before {  create_subdirectory }
         its(:tree) { should == [directory, subdirectory] }
 
         describe 'with directories at 3 level' do
+          before { create_subsubdirectory }
           its(:tree) { should == [directory, subdirectory] }
         end
       end

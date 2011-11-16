@@ -22,7 +22,7 @@ module ElVfs
       it { command_for(:mkdir).should be_a(ElVfs::Command::CreateDirectory) }
       it { command_for(:mkfile).should be_a(ElVfs::Command::CreateFile) }
       it { command_for(:open).should be_a(ElVfs::Command::ChangeWorkingDirectory) }
-      it { command_for(:parents).should be_a(ElVfs::Command::GetParents) }
+      it { command_for(:parents).should be_a(ElVfs::Command::GetAncestors) }
       it { command_for(:paste).should be_a(ElVfs::Command::CopyEntries) }
       it { command_for(:ping).should be_a(ElVfs::Command::Ping) }
       it { command_for(:read).should be_a(ElVfs::Command::ReadFileBody) }
@@ -30,7 +30,7 @@ module ElVfs
       it { command_for(:resize).should be_a(ElVfs::Command::ResizeImage) }
       it { command_for(:rm).should be_a(ElVfs::Command::DestroyEntries) }
       it { command_for(:tmb).should be_a(ElVfs::Command::CreateThumbnail) }
-      it { command_for(:tree).should be_a(ElVfs::Command::GetSubtree) }
+      it { command_for(:tree).should be_a(ElVfs::Command::GetDescendants) }
       it { command_for(:upload).should be_a(ElVfs::Command::UploadFiles) }
     end
   end
