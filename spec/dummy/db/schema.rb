@@ -17,16 +17,17 @@ ActiveRecord::Schema.define(:version => 20111111111111) do
     t.string   "type"
     t.string   "ancestry"
     t.integer  "ancestry_depth"
-    t.text     "entry_uid"
-    t.text     "entry_uid_hash"
+    t.text     "entry_path"
+    t.text     "entry_path_hash"
     t.string   "entry_name"
     t.string   "entry_mime_type"
     t.integer  "entry_size"
+    t.integer  "root_number"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "el_vfs_entries", ["ancestry"], :name => "index_el_vfs_entries_on_ancestry"
-  add_index "el_vfs_entries", ["entry_uid_hash"], :name => "index_el_vfs_entries_on_entry_uid_hash"
+  add_index "el_vfs_entries", ["entry_path_hash"], :name => "index_el_vfs_entries_on_entry_path_hash"
 
 end

@@ -6,8 +6,8 @@ describe ElVfs::File do
   let(:file) { Fabricate :file }
 
   it { file.el_hash[:name].should == 'file.txt' }
-  it { file.el_hash[:hash].should == 'l0_ZGlyZWN0b3J5L2ZpbGUudHh0' }
-  it { file.el_hash[:phash].should == 'l0_ZGlyZWN0b3J5' }
+  it { file.el_hash[:hash].should == 'r1_ZGlyZWN0b3J5L2ZpbGUudHh0' }
+  it { file.el_hash[:phash].should == 'r1_ZGlyZWN0b3J5' }
   it { file.el_hash[:mime].should == 'text/plain' }
   it { file.el_hash[:date].should == I18n.l(Time.now) }
   it { file.el_hash[:size].should == 10 }

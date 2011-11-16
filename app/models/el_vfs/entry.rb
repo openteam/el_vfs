@@ -2,25 +2,31 @@ module ElVfs
   class Entry < ActiveRecord::Base
     validates_presence_of :entry_name
     has_ancestry :cache_depth => true
-    before_save :set_entry_uid
-    before_save :set_entry_uid_hash
+    before_save :set_entry_path
+    before_save :set_entry_path_hash
 
-    scope :only_files, where(['type <> ?', 'ElVfs::Directory'])
-    scope :only_directories, where(:type => 'ElVfs::Directory')
+    scope :only_files, where("type not in ('ElVfs::Directory', 'ElVfs::Root')")
+    scope :only_directories, where(:type => ['ElVfs::Directory', 'ElVfs::Root'])
 
-    delegate :entry_uid_hash, :to => :parent, :allow_nil => true, :prefix => true
+    delegate :entry_path_hash, :to => :parent, :allow_nil => true, :prefix => true
+
+    def directories
+      children.only_directories
+    end
+
+    def files
+      children.only_files
+    end
 
     def self.root
-      Directory.find_or_initialize_by_entry_name('').tap do | root |
-        root.save! :validate => false
-      end
+      Root.find_or_create_by_entry_name('root')
     end
 
     def el_hash
       el_entry.merge(el_permissions)
     end
 
-    private
+    protected
 
       def el_permissions
         {
@@ -36,22 +42,14 @@ module ElVfs
           :mime => entry_mime_type,
           :date => I18n.l(updated_at),
           :size => entry_size,
-          :hash => entry_uid_hash,
-          :phash => parent_entry_uid_hash.to_s,
+          :hash => entry_path_hash,
+          :phash => parent_entry_path_hash.to_s,
           :url  => ::Rails.application.routes.url_helpers.entry_url(self, ::Rails.application.config.action_mailer[:default_url_options])
         }
       end
 
-      def relative_entry_uid
-        is_root? ? '/' : entry_uid[1..-1] || ''
-      end
-
-      def set_entry_uid
-        self.entry_uid =  depth > 1 ? "#{parent.entry_uid}/#{entry_name}" : "/#{entry_name}"
-      end
-
-      def set_entry_uid_hash
-        self.entry_uid_hash = "l0_#{Base64.urlsafe_encode64(relative_entry_uid).strip.tr('=', '')}"
+      def set_entry_path_hash
+        self.entry_path_hash = "#{root.root_name}_#{Base64.urlsafe_encode64(relative_entry_path).strip.tr('=', '')}"
       end
   end
 end

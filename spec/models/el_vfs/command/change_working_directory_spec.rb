@@ -8,7 +8,7 @@ module ElVfs
     let(:subject)   { command.result }
     let(:root)      { Entry.root }
     alias :directory :root
-    let(:target)    { directory.entry_uid_hash }
+    let(:target)    { directory.entry_path_hash }
     let(:file)      { Fabricate :file, :parent => directory }
     alias :create_file :file
 
@@ -40,7 +40,7 @@ module ElVfs
 
           its(:api)     { should == 2}
           its(:cwd)     { should == directory.el_hash }
-          its(:files)   { should == [file, root, directory].map(&:el_hash) }
+          its(:files)   { should == [root, directory, file].map(&:el_hash) }
         end
       end
     end

@@ -6,7 +6,7 @@ module ElVfs
 
     def hash
       if init
-        self.target ||= Entry.root.entry_uid_hash
+        self.target ||= Entry.root.entry_path_hash
         {:api => 2, :cwd => directory.el_hash, :files => files, :options => []}
       elsif target
         {:cwd => directory.el_hash, :files => files}
@@ -19,17 +19,15 @@ module ElVfs
 
       def files
         @files ||= begin
-                     files = directory.children.only_files
-                     if tree
-                       files << Entry.root
-                       files += Entry.root.subtree(:to_depth => 2).only_directories
-                     end
+                     files = []
+                     files += Entry.where(['ancestry_depth <= ?', 2]).only_directories.order(:ancestry_depth) if tree
+                     files += directory.children.only_files
                      files.map!(&:el_hash)
                    end
       end
 
       def directory
-        @directory ||= Directory.find_by_entry_uid_hash target
+        @directory ||= Entry.find_by_entry_path_hash target
       end
   end
 
