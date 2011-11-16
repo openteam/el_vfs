@@ -26,6 +26,10 @@ module ElVfs
       el_entry.merge(el_permissions)
     end
 
+    def target
+      entry_path_hash
+    end
+
     protected
 
       def el_permissions

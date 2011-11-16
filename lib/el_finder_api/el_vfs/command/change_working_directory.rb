@@ -26,9 +26,6 @@ module ElVfs
                    end
       end
 
-      def directory
-        @directory ||= Entry.find_by_entry_path_hash target
-      end
   end
 
 end
