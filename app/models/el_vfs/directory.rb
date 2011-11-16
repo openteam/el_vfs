@@ -10,5 +10,12 @@ module ElVfs
       children.only_files
     end
 
+    protected
+
+      def el_entry
+        super.tap do | hash |
+          hash[:dirs] = directories.any? ? 1 : 0
+        end
+      end
   end
 end
