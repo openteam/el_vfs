@@ -7,7 +7,7 @@ class ElVfs::Command::SendFile < ElVfs::Command
     if target && file
       file.entry.data
     else
-      OpenStruct.new hash
+      OpenStruct.new wrong_params_hash
     end
   end
 
