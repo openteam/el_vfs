@@ -6,15 +6,18 @@ module ElVfs
     protected
       def hash
         if target && name
-          fs_directory = Dir.mktmpdir
-          begin
-            vfs_file = ElVfs::File.create :parent => directory, :entry => ::File.open("#{fs_directory}/#{name}", "w")
-          ensure
-            FileUtils.remove_entry_secure fs_directory
-          end
-          { added: [ vfs_file ] }
+          { added: [ create_empty_file ] }
         else
           wrong_params_hash
+        end
+      end
+
+    private
+
+      def create_empty_file
+        File.new(:parent => directory).tap do | file |
+          Dir.mktmpdir{|dir| file.entry = ::File.open("#{dir}/#{name}", "w") }
+          file.save!
         end
       end
   end

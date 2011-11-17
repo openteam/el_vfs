@@ -18,7 +18,7 @@ module ElVfs
 
     describe 'target: file' do
       let(:params)    { {target: target} }
-      it { pending 'не сохраняются фалы'; should == 'some text' }
+      it { pending 'не сохраняются файлы'; should == 'some text' }
     end
 
     describe "without target" do
