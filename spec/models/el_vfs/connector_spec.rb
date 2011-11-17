@@ -14,7 +14,7 @@ module ElVfs
     describe 'поиск команд' do
       it { command_for(:not_supported).should be_a(ElVfs::Command::Unknown) }
       it { command_for(:archive).should be_a(ElVfs::Command::PackEntries) }
-      it { command_for(:duplicate).should be_a(ElVfs::Command::DuplicateEntry) }
+      it { command_for(:duplicate).should be_a(ElVfs::Command::DuplicateEntries) }
       it { command_for(:edit).should be_a(ElVfs::Command::UpdateFileBody) }
       it { command_for(:extract).should be_a(ElVfs::Command::UnpackEntry) }
       it { command_for(:file).should be_a(ElVfs::Command::SendFile) }

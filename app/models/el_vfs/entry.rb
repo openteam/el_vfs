@@ -30,6 +30,12 @@ module ElVfs
       entry_path_hash
     end
 
+    def duplicate
+      dup.tap do | entry |
+        entry.update_attributes! :entry_name => entry.duplicate_name
+      end
+    end
+
     protected
 
       def el_permissions
