@@ -1,11 +1,4 @@
 # encoding: utf-8
-# ls
-# Вернуть список имен файлов в заданой директории.
-#   Аргументы:
-#     cmd : ls
-#     target : hash директории,
-#   Ответ:
-#     list : (Array) Список имен файлов
 
 require 'spec_helper'
 
