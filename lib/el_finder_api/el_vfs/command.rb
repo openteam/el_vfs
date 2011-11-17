@@ -35,6 +35,10 @@ module ElVfs
         @directory ||= Entry.only_directories.find_by_entry_path_hash target
       end
 
+      def file
+        @file ||= Entry.only_files.find_by_entry_path_hash target
+      end
+
       def hash
         {:error => [:errCmdParams, command_name.to_sym]}
       end
