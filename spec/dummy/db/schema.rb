@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(:version => 20111111111111) do
   end
 
   add_index "el_vfs_entries", ["ancestry"], :name => "index_el_vfs_entries_on_ancestry"
+  add_index "el_vfs_entries", ["entry_name"], :name => "index_el_vfs_entries_on_entry_name"
   add_index "el_vfs_entries", ["entry_path_hash"], :name => "index_el_vfs_entries_on_entry_path_hash"
 
 end

@@ -12,6 +12,7 @@ class CreateElVfsEntries < ActiveRecord::Migration
       t.integer :root_number
       t.timestamps
     end
+    add_index :el_vfs_entries, :entry_name
     add_index :el_vfs_entries, :ancestry
     add_index :el_vfs_entries, :entry_path_hash
   end

@@ -32,11 +32,19 @@ module ElVfs
 
     def duplicate
       dup.tap do | entry |
-        entry.update_attributes! :entry_name => entry.duplicate_name
+        Entry.transaction do
+          entry.update_attributes! :entry_name => entry.duplicate_name
+        end
       end
     end
 
     protected
+
+      def duplicate_name
+        i = 0
+        begin i += 1 end while parent.children.find_by_entry_name(name_of_copy(i))
+        name_of_copy(i)
+      end
 
       def el_permissions
         {

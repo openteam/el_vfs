@@ -9,13 +9,6 @@ module ElVfs
       self.entry_path=(uid)
     end
 
-    def duplicate
-      dup.tap do | entry |
-        entry.update_attributes! :entry_name => entry.duplicate_name
-      end
-    end
-
-
     file_accessor :entry
 
     protected
@@ -27,8 +20,8 @@ module ElVfs
         ::File.basename entry_name, ext_entry_name
       end
 
-      def duplicate_name
-        "#{base_entry_name} copy1#{ext_entry_name}"
+      def name_of_copy(number)
+        "#{base_entry_name} copy#{number}#{ext_entry_name}"
       end
 
       def relative_entry_path

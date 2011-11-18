@@ -4,8 +4,8 @@ module ElVfs
 
     protected
 
-      def duplicate_name
-        "#{entry_name} copy1"
+      def name_of_copy(number)
+        "#{entry_name} copy#{number}"
       end
 
       def relative_entry_path
