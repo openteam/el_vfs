@@ -31,14 +31,23 @@ module ElVfs
     end
 
     def duplicate
-      dup.tap do | entry |
-        Entry.transaction do
+      Entry.transaction do
+        dup.tap do | entry |
           entry.update_attributes! :entry_name => entry.duplicate_name
+          self.copy_descendants_to(entry)
         end
       end
     end
 
+
     protected
+      def copy_descendants_to(entry)
+        self.children.each do |child|
+          child_copy = child.dup
+          child_copy.update_attributes! :parent => entry
+          child.copy_descendants_to(child_copy)
+        end
+      end
 
       def duplicate_name
         i = 0
