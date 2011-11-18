@@ -3,47 +3,52 @@ require 'spec_helper'
 module ElVfs
 
   describe Command::GetAncestors do
-    let(:params)          { {} }
-    let(:command)         { Command::GetAncestors.new params }
-    let(:subject)         { command.result }
-    let(:root)            { Entry.root }
-    let(:directory)       { Fabricate :directory, :parent => root }
-    let(:target)          { directory.target }
-    let(:subdirectory)    { Fabricate(:directory, :parent => directory)}
-    let(:subsubdirectory) { Fabricate(:directory, :parent => subdirectory)}
+    let(:params)                  { {target: current.target} }
+    let(:command)                 { Command::GetAncestors.new params }
+    let(:subject)                 { command.result }
+    let(:root)                    { Entry.root }
+    let(:directory)               { Fabricate :directory, :parent => root }
+    let(:another_directory)       { Fabricate :directory, :parent => root, :entry_name => 'another_directory' }
+    let(:subdirectory)            { Fabricate(:directory, :parent => directory, :entry_name => 'subdirectory')}
+    let(:another_subdirectory)    { Fabricate(:directory, :parent => directory, :entry_name => 'another_subdirectory')}
+    let(:subsubdirectory)         { Fabricate(:directory, :parent => subdirectory, :entry_name => 'subsubdirectory')}
+    let(:another_subsubdirectory) { Fabricate(:directory, :parent => subdirectory, :entry_name => 'another_subsubdirectory')}
+    let(:current)
+
     alias :create_directory :directory
     alias :create_subdirectory :subdirectory
     alias :create_subsubdirectory :subsubdirectory
+    alias :create_another_directory :another_directory
+    alias :create_another_subdirectory :another_subdirectory
+    alias :create_another_subsubdirectory :another_subsubdirectory
+
+    before          { create_directory }
+    before          { create_another_directory }
+    before          { create_subdirectory }
+    before          { create_another_subdirectory }
+    before          { create_subsubdirectory }
+    before          { create_another_subsubdirectory }
 
     describe 'target: root' do
-      let(:params)  { {target: root.target } }
-      its(:tree)    { should == [] }
-    end
-
-    describe 'target: directory' do
-      let(:params)  { {target: directory.target } }
+      let(:current) { root }
       its(:tree)    { should == [root] }
     end
 
-    describe 'target: subdirectory' do
-      let(:params)  { {target: subdirectory.target } }
+    describe 'target: directory' do
+      let(:current) { directory }
       its(:tree)    { should == [root, directory] }
     end
 
+    describe 'target: subdirectory' do
+      let(:current) { subdirectory }
+      its(:tree)    { should == [root, directory, subdirectory, another_subdirectory] }
+    end
+
     describe 'target: subsubdirectory' do
-      let(:params)  { {target: subsubdirectory.target } }
-      its(:tree)    { should == [root, directory, subdirectory] }
+      let(:current) { subsubdirectory }
+      its(:tree)    { should == [root, directory, subdirectory, another_subdirectory, subsubdirectory, another_subsubdirectory] }
     end
 
-    describe "without target" do
-      its(:error) { should == [:errCmdParams, :parents] }
-    end
-
-    describe 'wrong: params, target: target' do
-      let(:params) { {wrong: 'params', target: target} }
-
-      its(:error) { should == [:errCmdParams, :parents] }
-    end
   end
 
 end

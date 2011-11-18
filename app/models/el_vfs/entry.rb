@@ -39,7 +39,6 @@ module ElVfs
       end
     end
 
-
     protected
       def copy_descendants_to(entry)
         self.children.each do |child|
