@@ -25,7 +25,7 @@ module ElVfs
       it { command_for(:parents).should be_a(ElVfs::Command::GetAncestors) }
       it { command_for(:paste).should be_a(ElVfs::Command::CopyEntries) }
       it { command_for(:ping).should be_a(ElVfs::Command::Ping) }
-      it { command_for(:read).should be_a(ElVfs::Command::ReadFileBody) }
+      it { command_for(:get).should be_a(ElVfs::Command::ReadFileBody) }
       it { command_for(:rename).should be_a(ElVfs::Command::RenameEntry) }
       it { command_for(:resize).should be_a(ElVfs::Command::ResizeImage) }
       it { command_for(:rm).should be_a(ElVfs::Command::DestroyEntries) }

@@ -4,7 +4,7 @@ require 'spec_helper'
 
 module ElVfs
 
-  describe Command::SendFile do
+  describe Command::ListNames do
     let(:params)    { {} }
     let(:command)   { Command::ListNames.new params }
     let(:subject)   { command.result }
