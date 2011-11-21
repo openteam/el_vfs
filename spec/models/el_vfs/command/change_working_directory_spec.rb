@@ -32,7 +32,6 @@ module ElVfs
         its(:files)         { should == [] }
 
         describe '#files when files exists'  do
-
           before            { create_file }
 
           its(:files)       {  should == [file] }
@@ -81,31 +80,23 @@ module ElVfs
           its(:separator)       { should == '/' }
           its(:copyOverwrite)   { should == 1 }
           its(:archivers)       { should == {create: [], extract: []} }
+
         end
 
         describe 'tree: true' do
           let(:params)    { {init: true, target: target, tree: true} }
-          before          { Fabricate(:file, :parent => root )}
+          let(:file)      { Fabricate(:file, :parent => directory) }
+          alias :create_file :file
 
-          its(:api)       { should == 2}
+          before          { create_file }
+
+          its(:api)       { should == 2 }
           its(:cwd)       { should == directory }
-          its(:files)     { should == [root, directory, file] }
+          its(:files)     { should == [file, root, directory] }
         end
+
       end
     end
-
-    #describe 'target: directory' do
-      #let(:directory) { Fabricate :directory }
-      #let(:params)    { {target: target} }
-
-      #its(:cwd) { should == directory.el_hash }
-    #end
-
-    #describe 'wrong: params, target: target' do
-      #let(:params) { {wrong: 'params', target: target} }
-
-      #its(:error) { should == [:errCmdParams, :open] }
-    #end
   end
 
 end

@@ -43,6 +43,12 @@ module ElVfs
       ::Rails.application.routes.url_helpers.entry_url(self, ::Rails.application.config.action_mailer[:default_url_options])
     end
 
+    def to_s
+      entry_path
+    end
+
+    alias :inspect :to_s
+
     protected
       def copy_descendants_to(entry)
         self.children.each do |child|
