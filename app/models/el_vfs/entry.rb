@@ -39,6 +39,10 @@ module ElVfs
       end
     end
 
+    def url
+      ::Rails.application.routes.url_helpers.entry_url(self, ::Rails.application.config.action_mailer[:default_url_options])
+    end
+
     protected
       def copy_descendants_to(entry)
         self.children.each do |child|
@@ -70,7 +74,7 @@ module ElVfs
           :size => entry_size,
           :hash => entry_path_hash,
           :phash => parent_entry_path_hash.to_s,
-          :url  => ::Rails.application.routes.url_helpers.entry_url(self, ::Rails.application.config.action_mailer[:default_url_options])
+          :url  => url
         }
       end
 

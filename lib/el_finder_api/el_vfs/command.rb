@@ -1,58 +1,43 @@
-require 'ostruct'
-
 module ElVfs
 
-  class Command
+  class ::IsADirectoryValidator < ActiveModel::EachValidator
+    def validate_each(record, attribute, value)
+      record.errors[attribute] << "must be an instance of ElVfs::Directory (was #{value.class})" unless value.is_a?(ElVfs::Directory) || value.is_a?(ElVfs::Root)
+    end
+  end
+
+  class Command < Model
+
+    attr_accessor :arguments, :error, :result
+
+    class Arguments < Model
+      def entry
+        Entry.find_by_entry_path_hash target
+      end
+    end
 
     class_attribute :command_name
-    class_attribute :options
 
-    attr_accessor :argument_error, :parameters
+    delegate :target, :to => :arguments
 
-    def initialize(parameters)
-      self.parameters = parameters.with_indifferent_access
-      validate_parameter_keys
-      self.class.options.each do | option |
-        self.instance_variable_set "@#{option}", self.parameters[option]
-      end unless argument_error
+    class Error < Model
+      attr_accessor :error
     end
 
-    def headers
-      {}
+    def initialize(init_params)
+      self.arguments = "#{self.class.name}::Arguments".constantize.new(init_params)
     end
 
-    def result
-      if argument_error
-        OpenStruct.new wrong_params_hash
+    def run
+      if arguments.valid?
+        execute_command
       else
-        OpenStruct.new hash
+        self.error = Error.new(:error => [:errCmdParams, command_name.to_sym])
       end
     end
 
     protected
 
-      def directory
-        @directory ||= Entry.only_directories.find_by_entry_path_hash target
-      end
-
-      def file
-        @file ||= Entry.only_files.find_by_entry_path_hash target
-      end
-
-      def entry
-        @entry ||= Entry.find_by_entry_path_hash target
-      end
-
-      def wrong_params_hash
-        {:error => [:errCmdParams, command_name.to_sym]}
-      end
-
-      def self.options(*args)
-        self.options = args.map(&:to_s)
-        options.each do | option |
-          attr_accessor option
-        end
-      end
 
       def self.register_in_connector(command_name=nil)
         self.command_name = command_name || name.demodulize.underscore

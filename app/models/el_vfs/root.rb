@@ -7,6 +7,10 @@ module ElVfs
       ['r', root_number].join
     end
 
+    def el_vfs_path
+      entry_name
+    end
+
     protected
       def relative_entry_path
         '/'

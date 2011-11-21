@@ -1,15 +1,15 @@
 require 'dragonfly'
 
-el_vfs_app = Dragonfly[:files]
-el_vfs_app.configure_with(:rails)
-el_vfs_app.configure_with(:imagemagick)
-el_vfs_app.define_macro(ActiveRecord::Base, :file_accessor)
-el_vfs_app.content_filename = ->(job, request) { request[:file_name] }
+vfs = Dragonfly[:vfs]
+vfs.configure_with(:rails)
+vfs.configure_with(:imagemagick)
+vfs.define_macro(ActiveRecord::Base, :file_accessor)
+vfs.content_filename = ->(job, request) { request[:entry_name] }
 
 if defined?(Settings) && Settings[:s3]
   require 'fog'
-  el_vfs_app.datastore = Dragonfly::DataStorage::S3DataStore.new
-  el_vfs_app.datastore.configure do |datastore|
+  vfs.datastore = Dragonfly::DataStorage::S3DataStore.new
+  vfs.datastore.configure do |datastore|
     Settings[:s3].each do | key, value |
       datastore.send("#{key}=", value)
     end
@@ -29,7 +29,7 @@ if defined?(Settings) && Settings[:s3]
     alias_method_chain :request, :openteam
   end
 else
-  el_vfs_app.datastore.configure do |datastore|
+  vfs.datastore.configure do |datastore|
     datastore.root_path = "#{Rails.root}/files/#{Rails.env}"
     datastore.store_meta = false
   end

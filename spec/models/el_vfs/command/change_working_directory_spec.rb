@@ -5,58 +5,89 @@ module ElVfs
   describe Command::ChangeWorkingDirectory do
     let(:params)    { {} }
     let(:command)   { Command::ChangeWorkingDirectory.new params }
-    let(:subject)   { command.result }
     let(:root)      { Entry.root }
-    alias :directory :root
-    let(:target)    { directory.entry_path_hash }
-    let(:file)      { Fabricate :file, :parent => directory }
-    alias :create_file :file
+    let(:directory) { Fabricate :directory, :parent => root }
+    let(:target)    { directory.target }
+    let(:result)    { command.result }
 
-    before { create_file }
+    before          { command.run; p command.errors unless command.valid? }
 
-    its(:error) { should == [:errCmdParams, :open] }
+    describe 'init with real world params' do
+      let(:params)  { {init: true, _: 1321868932700, target: '', test: 'test', token: 42, tree: true} }
+      let(:subject) { result }
 
+      it            { should be_a(ElVfs::Command::ChangeWorkingDirectory::Result) }
+    end
 
-    describe 'init: true' do
-      let(:params) { {init: true} }
+    describe '(init: true)' do
+      let(:params)  { {init: true} }
 
-      its(:api)     { should == 2 }
-      its(:cwd)     { should == directory.el_hash }
-      its(:files)   { should == [file.el_hash] }
-      its(:options) { should == [] }
+      describe '#result' do
+        let(:subject)       { result }
 
-      describe 'target: directory' do
-        let(:params) { {init: true, target: target} }
-        let(:directory) { Fabricate(:directory) }
+        its(:api)           { should == 2 }
+        its(:cwd)           { should == root }
+        its(:uplMaxSize)    { should == '16m' }
+        its(:files)         { should == [] }
 
-        its(:api) { should == 2}
-        its(:cwd) { should == directory.el_hash }
-        its(:files)   { should == [file.el_hash] }
-        its(:options) { should == [] }
+        describe '#files when files exists'  do
+          let(:file)        { Fabricate(:file, :parent => root)}
+          alias :create_file :file
 
-        describe 'tree: true' do
-          let(:params) { {init: true, target: target, tree: true} }
-          before { Fabricate(:file, :parent => root )}
+          before            { create_file }
 
-          its(:api)     { should == 2}
-          its(:cwd)     { should == directory.el_hash }
-          its(:files)   { should == [root, directory, file].map(&:el_hash) }
+          its(:files)       {  should == [file] }
         end
+
+        describe '.options'  do
+          require 'ostruct'
+          let(:subject)         { OpenStruct.new result.options }
+
+          its(:path)            { should == root.entry_name }
+          its(:url)             { should =~ /^http:/ }
+          its(:disabled)        { should == [] }
+          its(:separator)       { should == '/' }
+          its(:copyOverwrite)   { should == 1 }
+          its(:archivers)       { should == {create: [], extract: []} }
+        end
+
       end
+
+
+
+      #describe 'target: directory' do
+        #let(:params)      { {init: true, target: target} }
+        #let(:directory)   { Fabricate(:directory) }
+
+        #its(:api)         { should == 2}
+        #its(:cwd)         { should == directory.el_hash }
+        #its(:uplMaxSize)  { should == '16m' }
+        #its(:files)       { should == [file] }
+        #its(:options)     { should == [] }
+
+        #describe 'tree: true' do
+          #let(:params)    { {init: true, target: target, tree: true} }
+          #before          { Fabricate(:file, :parent => root )}
+
+          #its(:api)       { should == 2}
+          #its(:cwd)       { should == directory.el_hash }
+          #its(:files)     { should == [root, directory, file].map(&:el_hash) }
+        #end
+      #end
     end
 
-    describe 'target: directory' do
-      let(:directory) { Fabricate :directory }
-      let(:params)    { {target: target} }
+    #describe 'target: directory' do
+      #let(:directory) { Fabricate :directory }
+      #let(:params)    { {target: target} }
 
-      its(:cwd) { should == directory.el_hash }
-    end
+      #its(:cwd) { should == directory.el_hash }
+    #end
 
-    describe 'wrong: params, target: target' do
-      let(:params) { {wrong: 'params', target: target} }
+    #describe 'wrong: params, target: target' do
+      #let(:params) { {wrong: 'params', target: target} }
 
-      its(:error) { should == [:errCmdParams, :open] }
-    end
+      #its(:error) { should == [:errCmdParams, :open] }
+    #end
   end
 
 end

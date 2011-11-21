@@ -1,5 +1,6 @@
 module ElVfs
   class File < Entry
+    file_accessor :entry
 
     def entry_uid
       entry_path
@@ -8,8 +9,6 @@ module ElVfs
     def entry_uid=(uid)
       self.entry_path=(uid)
     end
-
-    file_accessor :entry
 
     protected
       def ext_entry_name
@@ -31,5 +30,6 @@ module ElVfs
       def set_entry_path
         self.entry_path = "#{parent.entry_path}#{entry_name}"
       end
+
   end
 end
