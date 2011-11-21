@@ -9,12 +9,14 @@ module ElVfs
     let(:directory) { Fabricate :directory, :parent => root }
     let(:target)    { directory.target }
     let(:result)    { command.result }
+    let(:subject)   { result }
+    let(:file)      { Fabricate(:file, :parent => root)}
+    alias :create_file :file
 
-    before          { command.run; p command.errors unless command.valid? }
+    before          { command.run }
 
     describe 'init with real world params' do
       let(:params)  { {init: true, _: 1321868932700, target: '', test: 'test', token: 42, tree: true} }
-      let(:subject) { result }
 
       it            { should be_a(ElVfs::Command::ChangeWorkingDirectory::Result) }
     end
@@ -23,7 +25,6 @@ module ElVfs
       let(:params)  { {init: true} }
 
       describe '#result' do
-        let(:subject)       { result }
 
         its(:api)           { should == 2 }
         its(:cwd)           { should == root }
@@ -31,8 +32,6 @@ module ElVfs
         its(:files)         { should == [] }
 
         describe '#files when files exists'  do
-          let(:file)        { Fabricate(:file, :parent => root)}
-          alias :create_file :file
 
           before            { create_file }
 
@@ -54,26 +53,45 @@ module ElVfs
       end
 
 
+      describe 'target: directory' do
+        let(:params)      { {init: true, target: target} }
 
-      #describe 'target: directory' do
-        #let(:params)      { {init: true, target: target} }
-        #let(:directory)   { Fabricate(:directory) }
+        its(:api)         { should == 2}
+        its(:cwd)         { should == directory }
+        its(:uplMaxSize)  { should == '16m' }
+        describe '#files' do
+          before          {p create_file }
+          describe 'when files in root dir'  do
+            its(:files)     { should == [] }
+          end
+          describe 'when files in current dir'  do
+            let(:file)      { Fabricate(:file, :parent => directory) }
+            alias :create_file :file
 
-        #its(:api)         { should == 2}
-        #its(:cwd)         { should == directory.el_hash }
-        #its(:uplMaxSize)  { should == '16m' }
-        #its(:files)       { should == [file] }
-        #its(:options)     { should == [] }
+            its(:files)     { should == [file] }
+          end
+        end
+        describe '.options'  do
+          require 'ostruct'
+          let(:subject)         { OpenStruct.new result.options }
 
-        #describe 'tree: true' do
-          #let(:params)    { {init: true, target: target, tree: true} }
-          #before          { Fabricate(:file, :parent => root )}
+          its(:path)            { should == 'root/directory' }
+          its(:url)             { should =~ /^http:/ }
+          its(:disabled)        { should == [] }
+          its(:separator)       { should == '/' }
+          its(:copyOverwrite)   { should == 1 }
+          its(:archivers)       { should == {create: [], extract: []} }
+        end
 
-          #its(:api)       { should == 2}
-          #its(:cwd)       { should == directory.el_hash }
-          #its(:files)     { should == [root, directory, file].map(&:el_hash) }
-        #end
-      #end
+        describe 'tree: true' do
+          let(:params)    { {init: true, target: target, tree: true} }
+          before          { Fabricate(:file, :parent => root )}
+
+          its(:api)       { should == 2}
+          its(:cwd)       { should == directory }
+          its(:files)     { should == [root, directory, file] }
+        end
+      end
     end
 
     #describe 'target: directory' do

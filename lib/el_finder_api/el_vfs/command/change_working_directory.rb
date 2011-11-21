@@ -28,9 +28,9 @@ module ElVfs
       end
 
       def files
-        entry.files.all.tap do | entries |
-          entries += Entry.where(['ancestry_depth <= ?', 2]).only_directories.order(:ancestry_depth) if tree
-        end
+        entries = entry.files.all
+        entries += Entry.where(['ancestry_depth <= ?', 2]).only_directories.order(:ancestry_depth) if tree
+        entries
       end
 
       def uplMaxSize
