@@ -20,6 +20,9 @@ module ElVfs
       def entry
         @entry ||= Entry.find_by_entry_path_hash target
       end
+      def entries
+        @entries ||= targets.map{|target| Entry.find_by_entry_path_hash target}
+      end
     end
 
     class Result < Model

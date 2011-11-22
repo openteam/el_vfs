@@ -2,23 +2,23 @@ module ElVfs
   class Command::DestroyEntries < ElVfs::Command
     register_in_connector :rm
 
-    options :targets
+    class Arguments < Command::Arguments
+      attr_accessor :targets
+      validates_presence_of :targets
+      validates :entries, :is_a_entry => true
+    end
 
-    protected
-
-    def hash
-      if targets && entries.any? && entries.all?
-        { :removed => entries.map(&:destroy) }
-      else
-        wrong_params_hash
+    class Result < Command::Result
+      def removed
+        arguments.entries
       end
     end
 
-    private
+    protected
 
-    def entries
-      @entries ||= [*targets].map{|hash| Entry.find_by_entry_path_hash(hash)}
-    end
+      def execute_command
+        arguments.entries.map(&:destroy)
+      end
 
   end
 end
