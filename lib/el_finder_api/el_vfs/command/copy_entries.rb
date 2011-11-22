@@ -7,7 +7,7 @@ module ElVfs
       validates_presence_of :src, :dst, :targets
 
       validates :source, :destination, :is_a_directory => true
-      validates :entries, :is_a_entry => true
+      validates :entries, :is_an_entry => true
 
       def cut?
         cut == '1' || cut == 'true' || cut == true

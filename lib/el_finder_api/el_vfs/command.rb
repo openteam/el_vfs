@@ -6,7 +6,7 @@ module ElVfs
     end
   end
 
-  class ::IsAEntryValidator < ActiveModel::EachValidator
+  class ::IsAnEntryValidator < ActiveModel::EachValidator
     def validate_each(record, attribute, value)
       record.errors[attribute] << "must be an instance of ElVfs::Entry (was #{value.class})" unless value.is_a?(ElVfs::Entry)
     end

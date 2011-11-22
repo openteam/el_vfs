@@ -5,7 +5,7 @@ module ElVfs
     class Arguments < Command::Arguments
       attr_accessor :target, :name
       validates_presence_of :target, :name
-      validates :entry, :is_a_entry => true
+      validates :entry, :is_an_entry => true
     end
 
     class Result < Command::Result
