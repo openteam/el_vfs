@@ -1,7 +1,14 @@
-class ElVfs::Command::Unknown < ElVfs::Command
-  register_in_connector
+module ElVfs
+  class Command::Unknown < Command
+    register_in_connector
 
-  def result
-    { :error => :errUnknownCmd }
+    class Arguments < Command::Arguments
+    end
+
+    class Result < Command::Result
+      def error
+        :errUnknownCmd
+      end
+    end
   end
 end

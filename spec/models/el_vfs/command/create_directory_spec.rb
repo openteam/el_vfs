@@ -14,7 +14,7 @@ module ElVfs
 
       describe 'result' do
         let(:subject) { command.result }
-
+        before        { command.run }
         its(:added)   { should == [root.directories.first] }
       end
     end

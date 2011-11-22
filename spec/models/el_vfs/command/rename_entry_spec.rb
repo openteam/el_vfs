@@ -9,11 +9,12 @@ module ElVfs
     let(:file)        { Fabricate :file }
     let(:command)     { described_class.new params }
 
+    before            { command.run }
+
     describe 'target: directory' do
       alias :entry :directory
 
       describe 'run command' do
-        before        { command.send(:execute_command) }
         it            { entry.reload.entry_name.should == 'new_name' }
       end
 

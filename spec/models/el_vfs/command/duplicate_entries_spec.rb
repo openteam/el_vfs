@@ -18,6 +18,7 @@ module ElVfs
 
     describe '#result' do
       let(:subject)       { command.result }
+      before              { command.run }
 
       its(:added)         { subject.map(&:entry_name).should == ['directory copy1', 'file copy1.txt'] }
     end

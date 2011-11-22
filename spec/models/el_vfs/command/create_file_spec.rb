@@ -10,10 +10,11 @@ module ElVfs
     let(:root)        { Entry.root }
 
     describe 'target: root' do
-      it              { expect{command.send(:execute_command)}.to change{root.files.count}.by(1) }
+      it              { expect{command.run}.to change{root.files.count}.by(1) }
 
       describe 'result' do
         let(:subject) { command.result }
+        before        { command.run }
 
         its(:added)   { should == [root.files.first] }
       end

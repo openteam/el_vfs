@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe ElVfs::Command::Unknown do
-  let(:subject) { ElVfs::Command::Unknown.new({}) }
-  its(:result) { should == {:error => :errUnknownCmd} }
+  let(:command) { described_class.new({}) }
+  let(:subject) { command.result }
+  before        { command.run }
+  its(:error)   { should == :errUnknownCmd }
 end

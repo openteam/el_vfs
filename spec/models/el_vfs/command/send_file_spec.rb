@@ -7,7 +7,6 @@ module ElVfs
   describe Command::SendFile do
     let(:params)    { {} }
     let(:command)   { Command::SendFile.new params }
-    let(:subject)   { command.result }
     let(:root)      { Entry.root }
     let(:directory) { Fabricate :directory, :parent => root }
     alias :create_directory :directory
@@ -17,18 +16,12 @@ module ElVfs
 
 
     describe 'target: file' do
-      let(:params)    { {target: target} }
-      it { pending 'не сохраняются файлы'; should == 'some text' }
+      let(:params)  { {target: target} }
+      let(:subject) { command }
+      before        { command.run }
+      its(:headers) { subject['Location'].should == file.url }
     end
 
-    describe "without target" do
-      its(:error) { should == [:errCmdParams, :file] }
-    end
-
-    describe 'wrong: params, target: target' do
-      let(:params) { {wrong: 'params', target: target} }
-      its(:error) { should == [:errCmdParams, :file] }
-    end
   end
 
 end

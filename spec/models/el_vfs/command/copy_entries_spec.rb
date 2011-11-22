@@ -13,10 +13,11 @@ module ElVfs
     let(:command)       { described_class.new params }
     alias :create_targets :targets
 
-    before            { create_targets }
+    before              { create_targets }
 
     describe 'default parameters' do
       describe '#result' do
+        before          { command.run }
         let(:subject)   { command.result }
 
         its(:added)     { subject.map(&:entry_name).should == entries.map(&:entry_name) }
@@ -35,6 +36,7 @@ module ElVfs
       let(:params)      { valid_params[:cut] = true; valid_params }
 
       describe '#result' do
+        before          { command.run }
         let(:subject)   { command.result }
 
         its(:added)     { should == entries.map(&:reload) }
@@ -42,8 +44,8 @@ module ElVfs
       end
 
       describe 'execute command' do
-        it              { expect{command.result}.to change{destination.children.count}.by(2) }
-        it              { expect{command.result}.to change{source.children.count}.by(-2) }
+        it              { expect{command.run}.to change{destination.children.count}.by(2) }
+        it              { expect{command.run}.to change{source.children.count}.by(-2) }
       end
     end
   end

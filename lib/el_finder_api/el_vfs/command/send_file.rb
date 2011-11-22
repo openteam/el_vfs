@@ -1,14 +1,15 @@
-class ElVfs::Command::SendFile < ElVfs::Command
-  register_in_connector :file
+module ElVfs
+  class Command::SendFile < Command
+    register_in_connector :file
 
-  options :target
+    class Arguments < Command::Arguments
+      attr_accessor :target
+      validates_presence_of :target
+      validates :entry, :is_a_file => true
+    end
 
-  def result
-    if target && file
-      file.entry.data
-    else
-      OpenStruct.new wrong_params_hash
+    def run
+      self.headers['Location'] = arguments.entry.url
     end
   end
-
 end
