@@ -6,17 +6,16 @@ module ElVfs
 
   describe Command::Ping do
     let(:params)    { {} }
-    let(:command)   { Command::Ping.new params }
+    let(:command)   { described_class.new params }
 
-    describe 'run ping' do
-      it { command.headers.should == { 'Conncetion' => 'close' } }
-      it { command.result.should == '' }
+    before          { command.run }
+
+    describe "#headers" do
+      let(:subject) { command.headers }
+
+      it            { should == { 'Connection' => 'close' } }
     end
 
-    describe 'wrong: params' do
-      let(:params) { {wrong: 'params'} }
-      it { command.result.error.should == [:errCmdParams, :ping] }
-    end
   end
 
 end

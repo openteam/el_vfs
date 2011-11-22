@@ -13,11 +13,6 @@ class ElVfs::Connector
     command_class_for(command_name).new(params)
   end
 
-  def run(params)
-    command = command_for(params)
-    command.result || command.error
-  end
-
   private
     def command_class_for(command_name)
       self.class.commands[command_name] || self.class.commands[:unknown]

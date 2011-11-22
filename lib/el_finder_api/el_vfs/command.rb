@@ -45,11 +45,13 @@ module ElVfs
       self.arguments = "#{self.class.name}::Arguments".constantize.new(init_params)
     end
 
-    def result
-      @result ||= "#{self.class.name}::Result".constantize.new(:arguments => arguments, :execute_command => execute_command)
+    def run
+      self.result = "#{self.class.name}::Result".constantize.new(:arguments => arguments, :execute_command => execute_command)
     end
 
-    alias :run :result
+    def headers
+      @headers ||= {}
+    end
 
     protected
 

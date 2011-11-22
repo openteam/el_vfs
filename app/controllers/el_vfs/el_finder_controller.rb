@@ -3,10 +3,13 @@ module ElVfs
     respond_to :json, :html
 
     def run
-      result = Connector.new.run(params)
+      command = Connector.new.command_for(params)
+      command.run
+      command.headers.each { |h,v| headers[h] = v }
+      json = command.result.try(:el_hash)
       respond_to do | format |
-        format.html { render :json => result.el_hash }
-        format.json { render :json => result.el_hash }
+        format.html { render :json => json }
+        format.json { render :json => json }
       end
     end
   end

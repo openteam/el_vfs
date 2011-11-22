@@ -1,15 +1,12 @@
-class ElVfs::Command::Ping < ElVfs::Command
-  register_in_connector
+module ElVfs
+  class Command::Ping < Command
+    register_in_connector
 
-  def headers
-    { 'Conncetion' => 'close' }
-  end
+    class Arguments < Command::Arguments
+    end
 
-  def result
-    if argument_error
-      OpenStruct.new wrong_params_hash
-    else
-      ''
+    def run
+      self.headers['Connection'] = 'close'
     end
   end
 end
