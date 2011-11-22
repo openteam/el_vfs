@@ -1,15 +1,23 @@
 module ElVfs
   class Command::CreateDirectory < ElVfs::Command
     register_in_connector :mkdir
-    options :target, :name
+    class Arguments < Command::Arguments
+      attr_accessor :target, :name
+      validates_presence_of :target, :name
+      validates :entry, :is_a_directory => true
+    end
 
-    protected
-      def hash
-        if target && name
-          { added: [ Directory.create!(:parent => directory, :entry_name => name) ] }
-        else
-          wrong_params_hash
-        end
+    class Result < Model
+      attr_accessor :arguments
+      delegate :entry, :to => :arguments
+
+      def added
+        [ Directory.create!(:parent => entry, :entry_name => arguments.name) ]
       end
+
+      def el_hash
+        { added: added }
+      end
+    end
   end
 end
