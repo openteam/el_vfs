@@ -21,11 +21,10 @@ module ElVfs
       def uplMaxSize; '16m'           end
 
       def files
-        entries = arguments.entry.children.all
-        entries += Entry.where(['ancestry_depth <= ?', 2]).only_directories.order(:ancestry_depth) if arguments.tree
-        entries.uniq
+        files = arguments.entry.children.all
+        files += Entry.where(['ancestry_depth <= ?', 2]).only_directories if arguments.tree
+        files.uniq
       end
-
 
       def options
         {path: arguments.entry.el_vfs_path, url: arguments.entry.url, disabled: [], separator: '/', copyOverwrite: 1, archivers: {create: [], extract: []}}

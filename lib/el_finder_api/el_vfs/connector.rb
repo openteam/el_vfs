@@ -15,24 +15,10 @@ class ElVfs::Connector
 
   def execute(params)
     command = command_for(params)
-    command.run
-    to_el_hash command.result || command.error
+    command.result || command.error
   end
 
   private
-    def to_el_hash(object)
-      if object.respond_to?(:el_hash)
-        object = object.el_hash.tap do | hash |
-          hash.each do | key, value |
-            hash[key] = to_el_hash(value)
-          end
-        end
-      elsif object.is_a? Array
-        object.map!{|o| to_el_hash(o)}
-      end
-      object
-    end
-
     def command_class_for(command_name)
       self.class.commands[command_name] || self.class.commands[:unknown]
     end

@@ -3,7 +3,7 @@ module ElVfs
     respond_to :json, :xml
 
     def run
-      respond_with Connector.new.execute(params)
+      respond_with Connector.new.execute(params).el_hash
     end
   end
 

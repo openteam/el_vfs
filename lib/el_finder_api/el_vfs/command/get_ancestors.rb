@@ -10,7 +10,11 @@ module ElVfs
 
     class Result < Command::Result
       def tree
-        [arguments.entry.ancestors + arguments.entry.ancestors.from_depth(1).map(&:directories) + [arguments.entry]].flatten.uniq
+        tree = arguments.entry.ancestors
+        tree += arguments.entry.ancestors.from_depth(1).map(&:directories).flatten
+        tree << arguments.entry
+        tree += Entry.where(['ancestry_depth <= ?', 2]).only_directories
+        tree.uniq
       end
     end
 

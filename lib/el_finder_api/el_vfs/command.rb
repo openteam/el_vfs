@@ -24,10 +24,6 @@ module ElVfs
 
     class Result < Model
       attr_accessor :arguments, :execute_command
-
-      def el_hash
-        methods.select{|m| method(m).owner == self.class}.inject({}){|h,m| h[m] = send(m); h}
-      end
     end
 
     class_attribute :command_name
