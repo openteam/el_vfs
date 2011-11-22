@@ -26,10 +26,7 @@ module ElVfs
       attr_accessor :arguments, :execute_command
 
       def el_hash
-        self.class.methods.delete_if{|m| m =~ /arguments/ || m =~ /result/ || m == 'el_hash'}.inject({}) do | method, el_hash |
-          el_hash[method] = self.send(method)
-          el_hash
-        end
+        methods.select{|m| method(m).owner == self.class}.inject({}){|h,m| h[m] = send(m); h}
       end
     end
 
