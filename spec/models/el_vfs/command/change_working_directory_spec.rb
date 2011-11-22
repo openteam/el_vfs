@@ -63,11 +63,14 @@ module ElVfs
           describe 'when files in root dir'  do
             its(:files)       { should == [] }
           end
-          describe 'when files in current dir'  do
+          describe 'when files and dirs in current dir'  do
             let(:file)        { Fabricate(:file, :parent => directory) }
+            let(:subdirectory){ Fabricate(:directory, :parent => directory) }
             alias :create_file :file
+            alias :create_subdirectory :subdirectory
+            before            { create_subdirectory }
 
-            its(:files)       { should == [file] }
+            its(:files)       { should == [file, subdirectory] }
           end
         end
         describe '.options'  do

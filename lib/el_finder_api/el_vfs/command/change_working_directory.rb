@@ -15,36 +15,20 @@ module ElVfs
       end
     end
 
-    class Result < Model
-      attr_accessor :arguments
-      delegate :entry, :tree, :init, :to => :arguments
-
-      def api
-        2
-      end
-
-      def cwd
-        entry
-      end
+    class Result < Command::Result
+      def api;        2               end
+      def cwd;        arguments.entry end
+      def uplMaxSize; '16m'           end
 
       def files
-        entries = entry.files.all
-        entries += Entry.where(['ancestry_depth <= ?', 2]).only_directories.order(:ancestry_depth) if tree
-        entries
+        entries = arguments.entry.children.all
+        entries += Entry.where(['ancestry_depth <= ?', 2]).only_directories.order(:ancestry_depth) if arguments.tree
+        entries.uniq
       end
 
-      def uplMaxSize
-        '16m'
-      end
 
       def options
-        {path: entry.el_vfs_path, url: entry.url, disabled: [], separator: '/', copyOverwrite: 1, archivers: {create: [], extract: []}}
-      end
-
-      def el_hash
-        el_hash = {cwd: entry, files: files, uplMaxSize: uplMaxSize}
-        el_hash.merge! api: api, options: options if init
-        el_hash
+        {path: arguments.entry.el_vfs_path, url: arguments.entry.url, disabled: [], separator: '/', copyOverwrite: 1, archivers: {create: [], extract: []}}
       end
     end
 

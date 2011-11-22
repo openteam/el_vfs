@@ -11,19 +11,12 @@ module ElVfs
     let(:root)      { Entry.root }
     let(:target)    { root.target }
 
+    before          { command.run }
+
     describe 'target: root' do
       let(:params)  { {target: target, name: 'file'} }
       its(:added)   { should == [root.files.first] }
-      it            { expect{command.result}.to change{root.files.count}.by(1) }
-    end
-
-    describe "without target" do
-      its(:error) { should == [:errCmdParams, :mkfile] }
-    end
-
-    describe 'wrong: params, target: target' do
-      let(:params) { {wrong: 'params', target: target} }
-      its(:error) { should == [:errCmdParams, :mkfile] }
+      it            { expect{command.result.added}.to change{root.files.count}.by(1) }
     end
   end
 

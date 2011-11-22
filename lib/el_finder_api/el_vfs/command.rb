@@ -16,9 +16,18 @@ module ElVfs
       end
     end
 
-    class_attribute :command_name
+    class Result < Model
+      attr_accessor :arguments
 
-    delegate :target, :to => :arguments
+      def el_hash
+        self.class.methods.delete_if{|m| %w[arguments arguments= el_hash].include?(m)}.inject({}) do | method, el_hash |
+          el_hash[method] = self.send(method)
+          el_hash
+        end
+      end
+    end
+
+    class_attribute :command_name
 
     class Error < Model
       attr_accessor :error

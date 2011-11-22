@@ -7,16 +7,9 @@ module ElVfs
       validates :entry, :is_a_directory => true
     end
 
-    class Result < Model
-      attr_accessor :arguments
-      delegate :entry, :to => :arguments
-
+    class Result < Command::Result
       def added
-        [ Directory.create!(:parent => entry, :entry_name => arguments.name) ]
-      end
-
-      def el_hash
-        { added: added }
+        [ Directory.create!(:parent => arguments.entry, :entry_name => arguments.name) ]
       end
     end
   end

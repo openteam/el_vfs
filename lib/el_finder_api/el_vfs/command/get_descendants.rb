@@ -9,16 +9,9 @@ module ElVfs
       validates :entry, :is_a_directory => true
     end
 
-    class Result < Model
-      attr_accessor :arguments
-      delegate :entry, :to => :arguments
-
+    class Result < Command::Result
       def tree
-        entry.descendants(:to_depth => 2)
-      end
-
-      def el_hash
-        {tree: tree}
+        arguments.entry.descendants(:to_depth => 2)
       end
     end
 

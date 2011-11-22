@@ -12,7 +12,7 @@ module ElVfs
 
     describe 'target: root' do
       let(:params)    { {target: root.target, name: 'directory'} }
-      it              { expect{command.run; command.result.el_hash}.to change{root.directories.count}.by(1) }
+      it              { expect{command.run; command.result.added }.to change{root.directories.count}.by(1) }
 
       describe 'result' do
         before        { command.run }
