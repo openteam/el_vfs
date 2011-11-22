@@ -42,7 +42,9 @@ module ElVfs
       end
 
       def el_hash
-        {api: api, cwd: cwd, files: files, uplMaxSize: uplMaxSize, options: options}.with_indifferent_access
+        el_hash = {cwd: entry, files: files, uplMaxSize: uplMaxSize}
+        el_hash.merge! api: api, options: options if init
+        el_hash
       end
     end
 
