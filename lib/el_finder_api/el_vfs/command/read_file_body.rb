@@ -1,15 +1,17 @@
-class ElVfs::Command::ReadFileBody < ElVfs::Command
-  register_in_connector :get
+module ElVfs
+  class Command::ReadFileBody < ElVfs::Command
+    register_in_connector :get
 
-  options :target
+    class Arguments < Command::Arguments
+      attr_accessor :target
+      validates_presence_of :target
+      validates :entry, :is_a_file => true
+    end
 
-  protected
-
-    def hash
-      if target && file
-        { :content => file.entry.data }
-      else
-        wrong_params_hash
+    class Result < Command::Result
+      def content
+        arguments.entry.entry.data
       end
     end
+  end
 end
