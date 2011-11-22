@@ -33,7 +33,7 @@ module ElVfs
 
     describe 'target: root' do
       let(:current)               { root }
-      its(:tree)                  { should == [root] }
+      its(:tree)                  { should == [root, directory, another_directory, subsubdirectory, another_subsubdirectory] }
     end
 
     describe 'target: directory' do

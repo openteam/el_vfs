@@ -5,67 +5,46 @@ require 'spec_helper'
 module ElVfs
 
   describe Command::CopyEntries do
-    let(:valid_params)  { {src: source.target, dst: destination.target,  targets: targets} }
-    let(:params)        { valid_params }
+    let(:params)        { {src: source.target, dst: destination.target,  targets: targets, cut: '0'} }
     let(:source)        { Fabricate :directory, :entry_name => 'source' }
     let(:destination)   { Fabricate :directory, :entry_name => 'destination' }
     let(:entries)       { [Fabricate(:file, :parent => source), Fabricate(:directory, :parent => source)] }
     let(:targets)       { entries.map(&:target) }
+    let(:command)       { described_class.new params }
     alias :create_targets :targets
-    let(:command)       { Command::CopyEntries.new params }
-    let(:subject)       { command.result }
+
+    before            { create_targets }
 
     describe 'default parameters' do
-      its(:added)       { subject.map(&:entry_name).should == entries.map(&:entry_name) }
-      its(:removed)     { should == [] }
+      describe '#result' do
+        let(:subject)   { command.result }
+
+        its(:added)     { subject.map(&:entry_name).should == entries.map(&:entry_name) }
+        its(:removed)   { should == [] }
+      end
 
       describe 'execute command' do
-        before          { create_targets }
-
-        it              { expect{command.result}.to change{destination.children.count}.by(2) }
-        it              { expect{command.result}.to_not change{source.children.count} }
-        it              { command.result; expect{entries.map(&:reload)}.should_not raise_error }
-
-        describe 'cut: true' do
-          let(:params)      { valid_params[:cut] = true; valid_params }
-
-          its(:added)       { subject.map(&:entry_name).should == entries.map(&:entry_name) }
-          its(:removed)     { should == entries.map(&:target) }
-
-          describe 'execute command' do
-            before          { create_targets }
-
-            it              { expect{command.result}.to change{destination.children.count}.by(2) }
-            it              { expect{command.result}.to change{source.children.count}.by(-2) }
-            it              { command.result; expect{entries.map(&:reload)}.should raise_error ActiveRecord::RecordNotFound }
-          end
-        end
+        it              { expect{command.run}.to change{destination.children.count}.by(2) }
+        it              { expect{command.run}.to_not change{source.children.count} }
+        it              { command.run; expect{entries.map(&:reload)}.should_not raise_error }
       end
     end
 
-    describe "without targets" do
-      let(:params)      { valid_params.delete :targets; valid_params }
-      its(:error)       { should == [:errCmdParams, :paste] }
-    end
+    describe 'cut: true' do
+      alias :valid_params :params
+      let(:params)      { valid_params[:cut] = true; valid_params }
 
-    describe "without src" do
-      let(:params)      { valid_params.delete :src; valid_params }
-      its(:error)       { should == [:errCmdParams, :paste] }
-    end
+      describe '#result' do
+        let(:subject)   { command.result }
 
-    describe "without dst" do
-      let(:params)      { valid_params.delete :dst; valid_params }
-      its(:error)       { should == [:errCmdParams, :paste] }
-    end
+        its(:added)     { should == entries.map(&:reload) }
+        its(:removed)   { should == entries.map(&:target) }
+      end
 
-    describe "with empty paste" do
-      let(:params)      { {targets: targets, paste: []} }
-      its(:error)       { should == [:errCmdParams, :paste] }
-    end
-
-    describe 'wrong: params' do
-      let(:params)      { valid_params[:wrong]='params'; valid_params }
-      its(:error)       { should == [:errCmdParams, :paste] }
+      describe 'execute command' do
+        it              { expect{command.result}.to change{destination.children.count}.by(2) }
+        it              { expect{command.result}.to change{source.children.count}.by(-2) }
+      end
     end
   end
 

@@ -2,41 +2,43 @@ module ElVfs
   class Command::CopyEntries < ElVfs::Command
     register_in_connector :paste
 
-    options :src, :dst, :targets, :cut
+    class Arguments < Command::Arguments
+      attr_accessor :targets, :src, :dst, :cut
+      validates_presence_of :src, :dst, :targets
 
+      validates :source, :destination, :is_a_directory => true
+      validates :entries, :is_a_entry => true
 
-    protected
-      def hash
-        if source && destination && entries.any? && entries.all?
-          {:added => copy_entries, :removed => removed_entries.map(&:target)}
-        else
-          wrong_params_hash
-        end
-      end
-
-    private
-      def removed_entries
-        cut ? entries.map(&:destroy) : []
-      end
-
-      def copy_entries
-        entries.map do | entry |
-          entry.dup.tap do | entry |
-            entry.update_attributes! :parent => destination
-          end
-        end
+      def cut?
+        cut == '1' || cut == 'true' || cut == true
       end
 
       def source
-        @source ||= Entry.only_directories.find_by_entry_path_hash(src)
+        @source ||= Entry..find_by_entry_path_hash(src)
       end
 
       def destination
-        @destination ||= Entry.only_directories.find_by_entry_path_hash(dst)
+        @destination ||= Entry.find_by_entry_path_hash(dst)
       end
+    end
 
-      def entries
-        @entries ||= [*targets].map{|hash| source.children.find_by_entry_path_hash(hash)}
+    class Result < Command::Result
+      def added
+        execute_command
+      end
+      def removed
+        arguments.cut? ? arguments.targets : []
+      end
+    end
+
+    protected
+      def execute_command
+        arguments.entries.map do | entry |
+          entry = entry.dup unless arguments.cut?
+          entry.tap do | entry |
+            entry.update_attributes! :parent => arguments.destination
+          end
+        end
       end
   end
 end
