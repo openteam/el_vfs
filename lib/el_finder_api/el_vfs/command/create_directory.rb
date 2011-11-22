@@ -9,8 +9,13 @@ module ElVfs
 
     class Result < Command::Result
       def added
-        [ Directory.create!(:parent => arguments.entry, :entry_name => arguments.name) ]
+        [ execute_command ]
       end
     end
+
+    protected
+      def execute_command
+        Directory.create!(:parent => arguments.entry, :entry_name => arguments.name)
+      end
   end
 end

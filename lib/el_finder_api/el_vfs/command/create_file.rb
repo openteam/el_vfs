@@ -10,12 +10,14 @@ module ElVfs
 
     class Result < Command::Result
       def added
-        [
-          ElVfs::File.new(:parent => arguments.entry).tap do | file |
-            Dir.mktmpdir{|dir| file.entry = ::File.open("#{dir}/#{arguments.name}", "w") }
-            file.save!
-          end
-        ]
+        [ execute_command ]
+      end
+    end
+
+    def execute_command
+      ElVfs::File.new(:parent => arguments.entry).tap do | file |
+        Dir.mktmpdir{|dir| file.entry = ::File.open("#{dir}/#{arguments.name}", "w") }
+        file.save!
       end
     end
   end

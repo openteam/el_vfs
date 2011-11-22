@@ -5,18 +5,18 @@ require 'spec_helper'
 module ElVfs
 
   describe Command::CreateFile do
-    let(:params)    { {} }
-    let(:command)   { Command::CreateFile.new params }
-    let(:subject)   { command.result }
-    let(:root)      { Entry.root }
-    let(:target)    { root.target }
-
-    before          { command.run }
+    let(:params)      { {target: root.target, name: 'file'} }
+    let(:command)     { described_class.new params }
+    let(:root)        { Entry.root }
 
     describe 'target: root' do
-      let(:params)  { {target: target, name: 'file'} }
-      its(:added)   { should == [root.files.first] }
-      it            { expect{command.result.added}.to change{root.files.count}.by(1) }
+      it              { expect{command.send(:execute_command)}.to change{root.files.count}.by(1) }
+
+      describe 'result' do
+        let(:subject) { command.result }
+
+        its(:added)   { should == [root.files.first] }
+      end
     end
   end
 

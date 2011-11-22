@@ -5,17 +5,14 @@ require 'spec_helper'
 module ElVfs
 
   describe Command::CreateDirectory do
-    let(:params)      { {} }
-    let(:command)     { Command::CreateDirectory.new params }
+    let(:params)      { {target: root.target, name: 'directory'} }
+    let(:command)     { described_class.new params }
     let(:root)        { Entry.root }
 
-
     describe 'target: root' do
-      let(:params)    { {target: root.target, name: 'directory'} }
-      it              { expect{command.run; command.result.added }.to change{root.directories.count}.by(1) }
+      it              { expect{command.send(:execute_command)}.to change{root.directories.count}.by(1) }
 
       describe 'result' do
-        before        { command.run }
         let(:subject) { command.result }
 
         its(:added)   { should == [root.directories.first] }
