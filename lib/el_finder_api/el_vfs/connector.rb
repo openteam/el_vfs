@@ -28,7 +28,7 @@ class ElVfs::Connector
           end
         end
       elsif object.is_a? Array
-        object.map{|o| to_el_hash(o)}
+        object.map!{|o| to_el_hash(o)}
       end
       object
     end

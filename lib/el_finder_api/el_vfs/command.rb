@@ -38,6 +38,10 @@ module ElVfs
 
     protected
 
+      # TODO: RF inline method
+      def execute_command
+        self.result = "#{self.class.name}::Result".constantize.new(:arguments => arguments)
+      end
 
       def self.register_in_connector(command_name=nil)
         self.command_name = command_name || name.demodulize.underscore

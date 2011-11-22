@@ -22,11 +22,5 @@ module ElVfs
       end
     end
 
-    protected
-      def execute_command
-        self.result = Result.new(:arguments => arguments)
-      end
-
-
   end
 end

@@ -1,21 +1,25 @@
-class ElVfs::Command::GetAncestors < ElVfs::Command
-  register_in_connector :parents
+module ElVfs
+  class Command::GetAncestors < ElVfs::Command
+    register_in_connector :parents
 
-  options :target
+    class Arguments < Command::Arguments
+      attr_accessor :target
+      validates_presence_of :target
+      validates :entry, :is_a_directory => true
+    end
 
-  protected
+    class Result < Model
+      attr_accessor :arguments
+      delegate :entry, :to => :arguments
 
-    def hash
-      if target
-        { :tree => get_ancestors }
-      else
-        wrong_params_hash
+      def tree
+        [entry.ancestors + entry.ancestors.from_depth(1).map(&:directories) + [entry]].flatten.uniq
+      end
+
+      def el_hash
+        {tree: tree}
       end
     end
 
-  private
-
-    def get_ancestors
-      [directory.ancestors + directory.ancestors.from_depth(1).map(&:directories) + [directory]].flatten.uniq
-    end
+  end
 end
