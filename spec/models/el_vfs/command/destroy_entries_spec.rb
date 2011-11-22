@@ -21,7 +21,7 @@ module ElVfs
         before            { command.run }
         let(:subject)     { command.result }
 
-        its(:removed)     { should == [file, directory] }
+        its(:removed)     { should == [file.target, directory.target] }
       end
 
       describe 'execute command' do

@@ -1,9 +1,13 @@
 module ElVfs
   class ElFinderController < ApplicationController
-    respond_to :json, :xml
+    respond_to :json, :html
 
     def run
-      respond_with Connector.new.execute(params).el_hash
+      result = Connector.new.run(params)
+      respond_to do | format |
+        format.html { render :json => result.el_hash }
+        format.json { render :json => result.el_hash }
+      end
     end
   end
 

@@ -10,7 +10,7 @@ module ElVfs
 
     class Result < Command::Result
       def removed
-        arguments.entries
+        arguments.targets
       end
     end
 

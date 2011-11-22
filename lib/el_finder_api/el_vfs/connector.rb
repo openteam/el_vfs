@@ -13,7 +13,7 @@ class ElVfs::Connector
     command_class_for(command_name).new(params)
   end
 
-  def execute(params)
+  def run(params)
     command = command_for(params)
     command.result || command.error
   end
